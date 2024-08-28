@@ -13,7 +13,7 @@ function Me() {
   const copyToClipboard = async () => {
     try {
       if (user() && user().private_id) {
-        const userLink = `t.me/CodeWatcherBot?start=${user().private_id}`;
+        const userLink = `https://t.me/PipeChat_Bot?start=${user().private_id}`;
         await navigator.clipboard.writeText(userLink);
       } else {
         Telegram.WebApp.showAlert("User data is not available.");
