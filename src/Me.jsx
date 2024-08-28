@@ -34,12 +34,12 @@ function Me() {
         </button>
       </div>
 
-      <div class="mt-8 max-w-md border border-zinc-700 mx-auto flex items-center rounded-md px-8 py-8 gap-4">
+      <div class="mt-8 max-w-md border border-zinc-700 mx-auto flex items-center justify-center rounded-md px-8 py-8 gap-4">
         <A href="/deleteAccount" class="flex flex-row-reverse items-center gap-2 px-2 py-2 text-center bg-red-500 text-white rounded-md" type="button">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
           </svg>
-          حذف حساب کاربری
+          حذف حساب
         </A>
 
         <A href="/privacyPolicy" class="flex flex-row-reverse items-center gap-2 px-2 py-2 text-center bg-slate-200 text-black rounded-md" type="button">
