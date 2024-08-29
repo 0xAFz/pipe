@@ -55,6 +55,8 @@ function SendMessage() {
 
     const handleSend = async () => {
         try {
+            console.log(user())
+            console.log(user().pubkey)
             const encrypted = encryptMessage(user().pubkey, message());
             const response = await sendMessage(params.privateID, encrypted);
             setMessage("");
