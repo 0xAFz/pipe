@@ -8,6 +8,7 @@ const getUser = async (privateID) => {
         const response = await axios.get(`/getUser/${privateID}`);
 
         if (response.status === 404) {
+            console.error("User not found", response.status, response.statusText)
             throw new Error('User not found');
         }
 
@@ -15,6 +16,7 @@ const getUser = async (privateID) => {
     } catch (error) {
         if (error.response && error.response.status !== 404) {
             const errorMessage = error.response?.data?.error || `Error: ${error.response?.status} ${error.response?.statusText}`;
+            console.error(errorMessage)
             throw new Error(errorMessage);
         }
         throw error;
@@ -28,10 +30,17 @@ const sendMessage = async (privateID, message) => {
                 'Content-Type': 'application/json',
             },
         });
+
+        if (response.status !== 200) {
+            console.error("Failed to send message", response.status, response.statusText)
+            throw new Error("Failed to send message");
+        }
+
         return response.data;
     } catch (error) {
         if (error.response) {
             const errorMessage = error.response?.data?.error || `Error: ${error.response?.status} ${error.response?.statusText}`;
+            console.error(errorMessage)
             throw new Error(errorMessage);
         }
         throw error;
@@ -48,11 +57,6 @@ function SendMessage() {
         try {
             const encrypted = encryptMessage(user().pubkey, message());
             const response = await sendMessage(params.privateID, encrypted);
-
-            if (response.status !== 200) {
-                throw new Error("Failed to send message");
-            }
-
             setMessage("");
             setSendStatus("پیامتو فرستادیم. تا ۳۰ دقیقه زمان داره که بخونه وگرنه پاک میشه :)");
         } catch (err) {
@@ -60,7 +64,7 @@ function SendMessage() {
         } finally {
             setTimeout(() => {
                 setSendStatus("");
-            }, 2000);
+            }, 5000);
         }
     };
 
@@ -84,8 +88,7 @@ function SendMessage() {
                                 ارسال
                             </button>
 
-                            {sendStatus() && <p class="text-center mt-4">{sendStatus()}</p>}
-
+                            {sendStatus() && <p dir="rtl" class="text-sm text-center mt-4">{sendStatus()}</p>}
                         </Match>
                     </Switch>
                 </Suspense>
