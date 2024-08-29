@@ -29,7 +29,7 @@ const getMe = async () => {
     const response = await axios.get('/getMe');
 
     if (response.status === 201) {
-      const { privateKey, pubKey } = await generateRSAKeyPair();
+      const { privateKey, pubKey } = generateRSAKeyPair();
       Telegram.WebApp.CloudStorage.setItem('privateKey', privateKey);
       Telegram.WebApp.CloudStorage.setItem('pubKey', pubKey);
 
