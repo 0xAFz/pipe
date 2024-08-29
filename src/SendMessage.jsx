@@ -1,7 +1,7 @@
 import { createSignal, createResource, Switch, Match, Suspense } from "solid-js";
 import { useParams } from "@solidjs/router";
 import axios from './axios';
-import { encrypt } from "./cryptography/RSA";
+import * as cryptoUtils from "./cryptography/cryptoUtils";
 
 const getUser = async (privateID) => {
     try {
@@ -55,8 +55,11 @@ function SendMessage() {
 
     const handleSendMessage = async () => {
         try {
-            const encryptedMessage = await encrypt(user().pubkey, message());
-            const response = await sendMessage(params.privateID, encryptedMessage);
+            const aesKey = forge.random.getBytesSync(16);
+            const { iv, data } = cryptoUtils.encryptAES(message(), aesKey);
+            const encryptedAESKey = cryptoUtils.encryptAESKey(aesKey, user().pubkey);
+
+            const response = await sendMessage(params.privateID, `${iv}-${encryptedAESKey}-${data}`);
             setMessage("");
             setSendStatus("پیامتو فرستادیم. تا ۳۰ دقیقه زمان داره که بخونه وگرنه پاک میشه :)");
         } catch (err) {

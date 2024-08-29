@@ -1,5 +1,10 @@
-import { decrypt } from "./cryptography/RSA";
 import { createSignal, createEffect } from "solid-js";
+import * as cryptoUtils from "./cryptography/cryptoUtils";
+
+const splitComponents = (combinedString) => {
+    const [iv, encryptedAESKey, encryptedMessage] = combinedString.split('-');
+    return { iv, encryptedAESKey, encryptedMessage };
+}
 
 function Message(props) {
     const [decryptedMessage, setDecryptedMessage] = createSignal("");
@@ -13,13 +18,16 @@ function Message(props) {
             }
 
             try {
-                const decrypted = await decrypt(privateKey, message);
-                if (decrypted === "") {
-                    console.log(decrypted)
+                const { iv, encryptedAESKey, encryptedMessage } = splitComponents(message);
+                const decryptedAESKey = cryptoUtils.decryptAESKey(encryptedAESKey, privateKey);
+                const decryptedText = cryptoUtils.decryptAES(encryptedMessage, decryptedAESKey, iv);
+
+                if (decryptedText === "") {
+                    console.log(decryptedText)
                     setDecryptedMessage("خطا در رمزگشایی!");
                 } else {
-                    console.log(decrypted)
-                    setDecryptedMessage(decrypted);
+                    console.log(decryptedText)
+                    setDecryptedMessage(decryptedText);
                 }
             } catch (e) {
                 console.log(e)
