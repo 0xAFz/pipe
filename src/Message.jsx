@@ -1,5 +1,5 @@
 import { decrypt } from "./cryptography/RSA";
-import { createSignal } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
 
 function Message(props) {
     const [decryptedMessage, setDecryptedMessage] = createSignal("");
