@@ -4,7 +4,7 @@ export function generateRSAKeyPair() {
     const keyPair = forge.pki.rsa.generateKeyPair({ bits: 512, workers: 2 });
     return {
         privateKey: forge.pki.privateKeyToPem(keyPair.privateKey),
-        publicKey: forge.pki.publicKeyToPem(keyPair.publicKey)
+        pubKey: forge.pki.publicKeyToPem(keyPair.publicKey)
     };
 }
 
