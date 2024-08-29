@@ -1,10 +1,10 @@
 import forge from 'node-forge';
 
 export function generateRSAKeyPair() {
-    const keyPair = forge.pki.rsa.generateKeyPair({ bits: 512, workers: 2 });
+    const keyPair = forge.pki.rsa.generateKeyPair(2048);
     return {
         privateKey: forge.pki.privateKeyToPem(keyPair.privateKey),
-        pubKey: forge.pki.publicKeyToPem(keyPair.publicKey)
+        pubKey: forge.pki.publicKeyToPem(keyPair.publicKey),
     };
 }
 
@@ -42,4 +42,13 @@ export function decryptAES(encryptedText, key, iv) {
     decipher.update(forge.util.createBuffer(encryptedText));
     decipher.finish();
     return decipher.output.toString();
+}
+
+export function combineComponents(iv, aesKey, encryptedMessage) {
+    return `${iv}-${aesKey}-${encryptedMessage}`;
+}
+
+export function splitComponents(combinedString) {
+    const [iv, aesKey, encryptedMessage] = combinedString.split('-');
+    return { iv, aesKey, encryptedMessage };
 }

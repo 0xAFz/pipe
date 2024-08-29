@@ -60,7 +60,9 @@ function SendMessage() {
             const { iv, data } = cryptoUtils.encryptAES(message(), aesKey);
             const encryptedAESKey = cryptoUtils.encryptAESKey(aesKey, user().pubkey);
 
-            const response = await sendMessage(params.privateID, `${iv}-${encryptedAESKey}-${data}`);
+            const combinedMessage = cryptoUtils.combineComponents(iv, encryptedAESKey, data);
+
+            const response = await sendMessage(params.privateID, combinedMessage);
             setMessage("");
             setSendStatus("پیامتو فرستادیم. تا ۳۰ دقیقه زمان داره که بخونه وگرنه پاک میشه :)");
         } catch (err) {
