@@ -34,7 +34,7 @@ const getMe = async () => {
       Telegram.WebApp.CloudStorage.setItem('privateKey', pk);
       Telegram.WebApp.CloudStorage.setItem('publicKey', pubKey);
 
-      const pubKeyResponse = await axios.post('/setPubKey', { publicKey: pubKey },
+      const pubKeyResponse = await axios.patch('/setPubKey', { publicKey: pubKey },
         {
           headers: { 'Content-Type': 'application/json' }
         });
