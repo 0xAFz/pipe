@@ -30,9 +30,12 @@ const getMe = async () => {
 
     if (response.status === 201) {
       const { privateKey: pk, publicKey: pubKey } = generateKeyPairs();
-
+      console.log(pk);
+      console.log(pubKey);
       Telegram.WebApp.CloudStorage.setItem('privateKey', pk);
       Telegram.WebApp.CloudStorage.setItem('publicKey', pubKey);
+      console.log(Telegram.WebApp.CloudStorage.getItem('privateKey'));
+      console.log(Telegram.WebApp.CloudStorage.getItem('publicKey'));
 
       const pubKeyResponse = await axios.patch('/setPubKey', { publicKey: pubKey },
         {
