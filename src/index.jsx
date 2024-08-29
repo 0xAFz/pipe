@@ -3,7 +3,7 @@ import { render } from 'solid-js/web';
 import { createResource, onMount } from 'solid-js';
 import { Router, Route } from "@solidjs/router";
 import axios from "./axios";
-import { generateKeyPairs } from './cryptography/ECC';
+import { generateKeyPair } from './cryptography/RSA';
 
 import './index.css';
 import App from './App';
@@ -29,9 +29,9 @@ const getMe = async () => {
     const response = await axios.get('/getMe');
 
     if (response.status === 201) {
-      const { privateKey: pk, publicKey: pubKey } = generateKeyPairs();
-      Telegram.WebApp.CloudStorage.setItem('privateKey', pk);
-      Telegram.WebApp.CloudStorage.setItem('publicKey', pubKey);
+      const { privateKey, pubKey } = await generateKeyPair();
+      Telegram.WebApp.CloudStorage.setItem('privateKey', privateKey);
+      Telegram.WebApp.CloudStorage.setItem('pubKey', pubKey);
 
       const pubKeyResponse = await axios.patch('/setPubKey', { "pubkey": pubKey },
         {

@@ -1,7 +1,7 @@
 import { createSignal, createResource, Switch, Match, Suspense } from "solid-js";
 import { useParams } from "@solidjs/router";
 import axios from './axios';
-import { encryptMessage } from "./cryptography/ECC";
+import { encrypt } from "./cryptography/RSA";
 
 const getUser = async (privateID) => {
     try {
@@ -25,7 +25,7 @@ const getUser = async (privateID) => {
 
 const sendMessage = async (privateID, message) => {
     try {
-        const response = await axios.post(`/sendMessage/${privateID}`, { "message": encrypted }, {
+        const response = await axios.post(`/sendMessage/${privateID}`, { "message": message }, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -53,12 +53,10 @@ function SendMessage() {
     const [sendStatus, setSendStatus] = createSignal("");
     const [user] = createResource(params.privateID, getUser);
 
-    const handleSend = async () => {
+    const handleSendMessage = async () => {
         try {
-            console.log(user())
-            console.log(user().pubkey)
-            const encrypted = encryptMessage(user().pubkey, message());
-            const response = await sendMessage(params.privateID, encrypted);
+            const encryptedMessage = await encrypt(user().pubkey, message());
+            const response = await sendMessage(params.privateID, encryptedMessage);
             setMessage("");
             setSendStatus("پیامتو فرستادیم. تا ۳۰ دقیقه زمان داره که بخونه وگرنه پاک میشه :)");
         } catch (err) {
@@ -86,7 +84,7 @@ function SendMessage() {
                             <p dir="rtl" class="text-base">پیامی که میخوای به <span class="text-sky-500">{params.privateID}</span> برسونیم رو بنویس..</p>
                             <textarea value={message()} onInput={(e) => setMessage(e.target.value)} dir="rtl" class="resize-none bg-transparent border border-zinc-600 focus:shadow-[0_0_4px_theme('colors.white')] rounded-md min-h-32 w-full ring-0 outline-0 px-2 py-1" placeholder="متن پیام.." name="message" id="message"></textarea>
 
-                            <button onClick={handleSend} type="button" class="bg-sky-600 w-full rounded px-4 py-2 active:bg-sky-700 transition">
+                            <button onClick={handleSendMessage} type="button" class="bg-sky-600 w-full rounded px-4 py-2 active:bg-sky-700 transition">
                                 ارسال
                             </button>
 
