@@ -7,6 +7,7 @@ function Message(props) {
     const decryptMessage = async (message) => {
         Telegram.WebApp.CloudStorage.getItem("privateKey", async (error, privateKey) => {
             if (error || !privateKey) {
+                console.log(error)
                 setDecryptedMessage("خطا در رمزگشایی!");
                 return;
             }
@@ -14,11 +15,14 @@ function Message(props) {
             try {
                 const decrypted = await decrypt(privateKey, message);
                 if (decrypted === "") {
+                    console.log(decrypted)
                     setDecryptedMessage("خطا در رمزگشایی!");
                 } else {
+                    console.log(decrypted)
                     setDecryptedMessage(decrypted);
                 }
             } catch (e) {
+                console.log(e)
                 setDecryptedMessage("خطا در رمزگشایی!");
             }
         });
