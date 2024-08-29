@@ -49,6 +49,6 @@ export function combineComponents(iv, aesKey, encryptedMessage) {
 }
 
 export function splitComponents(combinedString) {
-    const [iv, aesKey, encryptedMessage] = combinedString.split('-');
-    return { iv, aesKey, encryptedMessage };
+    const [iv, encryptedAESKey, encryptedMessage] = combinedString.split('-');
+    return { iv, encryptedAESKey, encryptedMessage };
 }
