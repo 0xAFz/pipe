@@ -3,6 +3,7 @@ import { render } from 'solid-js/web';
 import { createResource, onMount } from 'solid-js';
 import { Router, Route } from "@solidjs/router";
 import axios from "./axios";
+import { generateKeyPairs } from './cryptography/ECC';
 
 import './index.css';
 import App from './App';
@@ -24,15 +25,39 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 }
 
 const getMe = async () => {
-  const response = await axios.get('/getMe');
-  return response.data;
-}
+  try {
+    const response = await axios.get('/getMe');
+
+    if (response.status === 201) {
+      const { privateKey: pk, publicKey: pubKey } = generateKeyPairs();
+
+      Telegram.WebApp.CloudStorage.setItem('privateKey', pk);
+      Telegram.WebApp.CloudStorage.setItem('publicKey', pubKey);
+
+      const pubKeyResponse = await axios.post('/setPubKey', { publicKey: pubKey },
+        {
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+      if (pubKeyResponse.status !== 200) {
+        Telegram.WebApp.showAlert("Failed to set public key on server");
+        throw new Error('Failed to set public key on server');
+      }
+
+      console.log('Public key set successfully');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('Error occurred:', error.message);
+  }
+};
 
 const MainLayout = (props) => {
   const [user] = createResource(getMe);
 
   onMount(() => {
-    Telegram.WebApp.expand()
+    Telegram.WebApp.expand();
     Telegram.WebApp.setHeaderColor("#0C0A09");
   });
 
