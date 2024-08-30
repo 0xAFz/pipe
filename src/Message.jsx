@@ -2,7 +2,7 @@ import { createSignal, createEffect } from "solid-js";
 import * as cryptoUtils from "./cryptography/cryptoUtils";
 
 function Message(props) {
-    const [decryptedMessage, setDecryptedMessage] = createSignal("Decrypting..");
+    const [decryptedMessage, setDecryptedMessage] = createSignal("درحال رمزگشایی..");
 
     const decryptMessage = async (message) => {
         Telegram.WebApp.CloudStorage.getItem("privateKey", async (error, privateKey) => {
