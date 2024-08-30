@@ -7,12 +7,33 @@ async function generateKeyPair() {
         true,
         ["deriveKey", "deriveBits"]
     );
-    return keyPair;
+
+    const privateKeyJwk = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
+    const privateKeyString = JSON.stringify(privateKeyJwk);
+
+    return {
+        publicKey: keyPair.publicKey,
+        privateKey: privateKeyString
+    };
 }
 
 async function exportPublicKey(publicKey) {
     const exported = await window.crypto.subtle.exportKey("raw", publicKey);
     return btoa(String.fromCharCode.apply(null, new Uint8Array(exported)));
+}
+
+async function importPrivateKey(privateKeyString) {
+    const privateKeyJwk = JSON.parse(privateKeyString);
+    return window.crypto.subtle.importKey(
+        "jwk",
+        privateKeyJwk,
+        {
+            name: "ECDH",
+            namedCurve: "P-256",
+        },
+        true,
+        ["deriveKey", "deriveBits"]
+    );
 }
 
 async function importPublicKey(publicKeyBase64) {
@@ -107,14 +128,6 @@ async function hybridDecrypt(privateKey, ephemeralPublicKeyBase64, encryptedMess
     return decryptMessage(aesKey, encryptedMessage);
 }
 
-export {
-    generateKeyPair,
-    exportPublicKey,
-    importPublicKey,
-    hybridEncrypt,
-    hybridDecrypt,
-};
-
 export function combineEncryptedData(ephemeralPublicKey, encryptedMessage) {
     return `${ephemeralPublicKey}-${encryptedMessage}`;
 }
@@ -123,3 +136,12 @@ export function splitEncryptedData(combinedEncryptedData) {
     const [ephemeralPublicKey, encryptedMessage] = combinedEncryptedData.split('-');
     return { ephemeralPublicKey, encryptedMessage };
 }
+
+export {
+    generateKeyPair,
+    exportPublicKey,
+    importPublicKey,
+    importPrivateKey,
+    hybridEncrypt,
+    hybridDecrypt,
+};
