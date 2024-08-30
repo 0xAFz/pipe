@@ -8,13 +8,13 @@ async function generateKeyPair() {
         ["deriveKey", "deriveBits"]
     );
 
-    const privateKeyJwk = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
-    const privateKeyString = JSON.stringify(privateKeyJwk);
+    return keyPair;
+}
 
-    return {
-        publicKey: keyPair.publicKey,
-        privateKey: privateKeyString
-    };
+async function exportPrivateKey(privateKey) {
+    const privateKeyJwk = await window.crypto.subtle.exportKey("jwk", privateKey);
+    const privateKeyString = JSON.stringify(privateKeyJwk);
+    return privateKeyString;
 }
 
 async function exportPublicKey(publicKey) {
@@ -22,8 +22,8 @@ async function exportPublicKey(publicKey) {
     return btoa(String.fromCharCode.apply(null, new Uint8Array(exported)));
 }
 
-async function importPrivateKey(privateKeyString) {
-    const privateKeyJwk = JSON.parse(privateKeyString);
+async function importPrivateKey(privateKey) {
+    const privateKeyJwk = JSON.parse(privateKey);
     return window.crypto.subtle.importKey(
         "jwk",
         privateKeyJwk,
@@ -141,6 +141,7 @@ export {
     generateKeyPair,
     exportPublicKey,
     importPublicKey,
+    exportPrivateKey,
     importPrivateKey,
     hybridEncrypt,
     hybridDecrypt,

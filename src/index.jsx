@@ -28,11 +28,13 @@ const getMe = async () => {
     const response = await axios.get('/getMe');
 
     if (response.status === 201) {
-      const { publicKey, privateKey } = await cryptoUtils.generateKeyPair();
-      Telegram.WebApp.CloudStorage.setItem('privateKey', privateKey);
-      Telegram.WebApp.CloudStorage.setItem('pubKey', publicKey);
+      const keyPair = await cryptoUtils.generateKeyPair();
+      const privateKey = await cryptoUtils.exportPrivateKey(keyPair.privateKey);
+      const pubKeyBase64 = await cryptoUtils.exportPublicKey(keyPair.publicKey);
 
-      const pubKeyBase64 = await cryptoUtils.exportPublicKey(publicKey);
+      Telegram.WebApp.CloudStorage.setItem('privateKey', privateKey);
+      Telegram.WebApp.CloudStorage.setItem('pubKey', pubKeyBase64);
+
 
       const pubKeyResponse = await axios.patch('/setPubKey', { "pubkey": pubKeyBase64 },
         {
