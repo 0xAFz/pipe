@@ -6,7 +6,6 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(async (config) => {
   config.headers['Authorization'] = `tma ${window.Telegram.WebApp.initData}`;
-  config.headers['User-Agent'] = 'kuchak';
   return config;
 });
 

@@ -13,16 +13,14 @@ function Message(props) {
             }
 
             try {
-                const { iv, encryptedAESKey, encryptedMessage } = cryptoUtils.splitComponents(message);
-                const decryptedAESKey = cryptoUtils.decryptAESKey(encryptedAESKey, privateKey);
-                const decryptedText = cryptoUtils.decryptAES(encryptedMessage, decryptedAESKey, iv);
+                const { ephemeralPublicKey, encryptedMessage } = cryptoUtils.splitEncryptedData(message);
+                const decryptedMessage = cryptoUtils.hybridDecrypt(privateKey, ephemeralPublicKey, encryptedMessage);
 
-                if (decryptedText === "") {
-                    console.log(decryptedText);
+                if (decryptedMessage === "") {
+                    console.log(decryptedMessage);
                     setDecryptedMessage("خطا در رمزگشایی!");
                 } else {
-                    console.log(decryptedText);
-                    setDecryptedMessage(decryptedText);
+                    setDecryptedMessage(decryptedMessage);
                 }
             } catch (e) {
                 console.log(e);

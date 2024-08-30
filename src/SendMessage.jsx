@@ -56,13 +56,10 @@ function SendMessage() {
 
     const handleSendMessage = async () => {
         try {
-            const aesKey = forge.random.getBytesSync(16);
-            const { iv, data } = cryptoUtils.encryptAES(message(), aesKey);
-            const encryptedAESKey = cryptoUtils.encryptAESKey(aesKey, user().pubkey);
+            const { ephemeralPublicKey, encryptedMessage } = await cryptoUtils.hybridEncrypt(user().pubkey, message());
+            const combinedData = cryptoUtils.combineEncryptedData(ephemeralPublicKey, encryptedMessage);
 
-            const combinedMessage = cryptoUtils.combineComponents(iv, encryptedAESKey, data);
-
-            const response = await sendMessage(params.privateID, combinedMessage);
+            const response = await sendMessage(params.privateID, combinedData);
             setMessage("");
             setSendStatus("پیامتو فرستادیم. تا ۳۰ دقیقه زمان داره که بخونه وگرنه پاک میشه :)");
         } catch (err) {
