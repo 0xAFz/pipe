@@ -60,7 +60,7 @@ function SendMessage() {
 
             const response = await sendMessage(params.privateID, combinedData);
             setMessage("");
-            setSendStatus("پیامتو فرستادیم. تا ۳۰ دقیقه زمان داره که بخونه وگرنه پاک میشه :)");
+            setSendStatus("پیامتو فرستادیم.");
         } catch (err) {
             setSendStatus("اوه، مثل اینکه یه مشکلی هست. متاسفانه نتونستیم پیامت رو به دستش برسونیم!")
         } finally {
