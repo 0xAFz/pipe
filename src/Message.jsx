@@ -14,7 +14,7 @@ function Message(props) {
 
             try {
                 const { ephemeralPublicKey, encryptedMessage } = cryptoUtils.splitEncryptedData(message);
-                const decryptedMessage = cryptoUtils.hybridDecrypt(privateKey, ephemeralPublicKey, encryptedMessage);
+                const decryptedMessage = await cryptoUtils.hybridDecrypt(privateKey, ephemeralPublicKey, encryptedMessage);
 
                 if (decryptedMessage === "") {
                     console.log(decryptedMessage);
