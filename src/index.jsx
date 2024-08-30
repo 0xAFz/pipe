@@ -23,6 +23,24 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
+const setPubKey = async (pubKey) => {
+  try {
+    const response = await axios.patch('/setPubKey', { "pubkey": pubKey },
+      {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+    if (response.status !== 200) {
+      Telegram.WebApp.showAlert("Failed to set public key on server");
+      console.error('Error occurred: Failed to set public key on server');
+      throw new Error('Failed to set public key on server');
+    }
+    return response;
+  } catch (e) {
+    console.error('Failed to set public key on server', e.message);
+  }
+}
+
 const getMe = async () => {
   try {
     const response = await axios.get('/getMe');
@@ -35,23 +53,13 @@ const getMe = async () => {
       Telegram.WebApp.CloudStorage.setItem('privateKey', privateKey);
       Telegram.WebApp.CloudStorage.setItem('pubKey', pubKeyBase64);
 
-
-      const pubKeyResponse = await axios.patch('/setPubKey', { "pubkey": pubKeyBase64 },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-      if (pubKeyResponse.status !== 200) {
-        Telegram.WebApp.showAlert("Failed to set public key on server");
-        throw new Error('Failed to set public key on server');
-      }
-
+      const resp = await setPubKey(pubKeyBase64);
       console.log('Public key set successfully');
     }
 
     return response.data;
-  } catch (error) {
-    console.error('Error occurred:', error.message);
+  } catch (e) {
+    console.error('Error occurred:', e.message);
   }
 };
 

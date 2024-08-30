@@ -2,12 +2,12 @@ import { createSignal, createEffect } from "solid-js";
 import * as cryptoUtils from "./cryptography/cryptoUtils";
 
 function Message(props) {
-    const [decryptedMessage, setDecryptedMessage] = createSignal("");
+    const [decryptedMessage, setDecryptedMessage] = createSignal(props.content);
 
     const decryptMessage = async (message) => {
         Telegram.WebApp.CloudStorage.getItem("privateKey", async (error, privateKey) => {
             if (error || !privateKey) {
-                console.log(error);
+                console.error('Failed to get private key', error);
                 setDecryptedMessage("خطا در رمزگشایی!");
                 return;
             }
@@ -18,13 +18,12 @@ function Message(props) {
                 const decryptedMessage = await cryptoUtils.hybridDecrypt(privateKeyObj, ephemeralPublicKey, encryptedMessage);
 
                 if (decryptedMessage === "") {
-                    console.log(decryptedMessage);
                     setDecryptedMessage("خطا در رمزگشایی!");
                 } else {
                     setDecryptedMessage(decryptedMessage);
                 }
             } catch (e) {
-                console.log(e);
+                console.error('Error occurred:', e.message);
                 setDecryptedMessage("خطا در رمزگشایی!");
             }
         });

@@ -1,4 +1,4 @@
-async function generateKeyPair() {
+export async function generateKeyPair() {
     const keyPair = await window.crypto.subtle.generateKey(
         {
             name: "ECDH",
@@ -11,18 +11,18 @@ async function generateKeyPair() {
     return keyPair;
 }
 
-async function exportPrivateKey(privateKey) {
+export async function exportPrivateKey(privateKey) {
     const privateKeyJwk = await window.crypto.subtle.exportKey("jwk", privateKey);
     const privateKeyString = JSON.stringify(privateKeyJwk);
     return privateKeyString;
 }
 
-async function exportPublicKey(publicKey) {
+export async function exportPublicKey(publicKey) {
     const exported = await window.crypto.subtle.exportKey("raw", publicKey);
     return btoa(String.fromCharCode.apply(null, new Uint8Array(exported)));
 }
 
-async function importPrivateKey(privateKey) {
+export async function importPrivateKey(privateKey) {
     const privateKeyJwk = JSON.parse(privateKey);
     return window.crypto.subtle.importKey(
         "jwk",
@@ -36,7 +36,7 @@ async function importPrivateKey(privateKey) {
     );
 }
 
-async function importPublicKey(publicKeyBase64) {
+export async function importPublicKey(publicKeyBase64) {
     const keyData = Uint8Array.from(atob(publicKeyBase64), (c) => c.charCodeAt(0));
     return window.crypto.subtle.importKey(
         "raw",
@@ -50,7 +50,7 @@ async function importPublicKey(publicKeyBase64) {
     );
 }
 
-async function deriveSharedSecret(privateKey, publicKey) {
+export async function deriveSharedSecret(privateKey, publicKey) {
     return window.crypto.subtle.deriveBits(
         {
             name: "ECDH",
@@ -61,7 +61,7 @@ async function deriveSharedSecret(privateKey, publicKey) {
     );
 }
 
-async function generateAESKey(sharedSecret) {
+export async function generateAESKey(sharedSecret) {
     return window.crypto.subtle.importKey(
         "raw",
         sharedSecret,
@@ -71,7 +71,7 @@ async function generateAESKey(sharedSecret) {
     );
 }
 
-async function encryptMessage(key, message) {
+export async function encryptMessage(key, message) {
     const iv = window.crypto.getRandomValues(new Uint8Array(12));
     const encoded = new TextEncoder().encode(message);
 
@@ -91,7 +91,7 @@ async function encryptMessage(key, message) {
     return btoa(String.fromCharCode.apply(null, encryptedData));
 }
 
-async function decryptMessage(key, encryptedMessage) {
+export async function decryptMessage(key, encryptedMessage) {
     const encryptedData = Uint8Array.from(atob(encryptedMessage), (c) => c.charCodeAt(0));
     const iv = encryptedData.slice(0, 12);
     const ciphertext = encryptedData.slice(12);
@@ -108,7 +108,7 @@ async function decryptMessage(key, encryptedMessage) {
     return new TextDecoder().decode(decrypted);
 }
 
-async function hybridEncrypt(receiverPublicKeyBase64, message) {
+export async function hybridEncrypt(receiverPublicKeyBase64, message) {
     const ephemeralKeyPair = await generateKeyPair();
     const ephemeralPublicKeyBase64 = await exportPublicKey(ephemeralKeyPair.publicKey);
     const receiverPublicKey = await importPublicKey(receiverPublicKeyBase64);
@@ -121,7 +121,7 @@ async function hybridEncrypt(receiverPublicKeyBase64, message) {
     };
 }
 
-async function hybridDecrypt(privateKey, ephemeralPublicKeyBase64, encryptedMessage) {
+export async function hybridDecrypt(privateKey, ephemeralPublicKeyBase64, encryptedMessage) {
     const ephemeralPublicKey = await importPublicKey(ephemeralPublicKeyBase64);
     const sharedSecret = await deriveSharedSecret(privateKey, ephemeralPublicKey);
     const aesKey = await generateAESKey(sharedSecret);
@@ -136,13 +136,3 @@ export function splitEncryptedData(combinedEncryptedData) {
     const [ephemeralPublicKey, encryptedMessage] = combinedEncryptedData.split('-');
     return { ephemeralPublicKey, encryptedMessage };
 }
-
-export {
-    generateKeyPair,
-    exportPublicKey,
-    importPublicKey,
-    exportPrivateKey,
-    importPrivateKey,
-    hybridEncrypt,
-    hybridDecrypt,
-};

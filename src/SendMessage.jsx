@@ -1,6 +1,5 @@
 import { createSignal, createResource, Switch, Match, Suspense } from "solid-js";
 import { useParams } from "@solidjs/router";
-import forge from 'node-forge';
 import axios from './axios';
 import * as cryptoUtils from "./cryptography/cryptoUtils";
 
