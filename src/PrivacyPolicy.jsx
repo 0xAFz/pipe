@@ -15,7 +15,7 @@ function PrivacyPolicy() {
             </p>
             <br />
             <ul dir="rtl" class="list-disc list-inside">
-                <li>آیدی عددی تلگرام (User ID)</li>
+                <li>شناسه عددی تلگرام (User ID)</li>
                 <li>تاریخ ساخت حساب کاربری</li>
                 <li>کلید عمومی (Public Key)</li>
                 <li>شناسه تصادفی خصوصی (Private Random ID)</li>
