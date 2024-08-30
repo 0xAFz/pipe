@@ -56,8 +56,7 @@ function SendMessage() {
 
     const handleSendMessage = async () => {
         try {
-            const receiverPubKey = await cryptoUtils.importPublicKey(user().pubkey);
-            const { ephemeralPublicKey, encryptedMessage } = await cryptoUtils.hybridEncrypt(receiverPubKey, message());
+            const { ephemeralPublicKey, encryptedMessage } = await cryptoUtils.hybridEncrypt(user().pubkey, message());
             const combinedData = cryptoUtils.combineEncryptedData(ephemeralPublicKey, encryptedMessage);
 
             const response = await sendMessage(params.privateID, combinedData);
