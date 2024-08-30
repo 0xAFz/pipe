@@ -2,7 +2,7 @@ import { createSignal, createEffect } from "solid-js";
 import * as cryptoUtils from "./cryptography/cryptoUtils";
 
 function Message(props) {
-    const [decryptedMessage, setDecryptedMessage] = createSignal(props.content);
+    const [decryptedMessage, setDecryptedMessage] = createSignal("Decrypting..");
 
     const decryptMessage = async (message) => {
         Telegram.WebApp.CloudStorage.getItem("privateKey", async (error, privateKey) => {
@@ -34,7 +34,7 @@ function Message(props) {
     });
 
     return (
-        <div class="px-4 py-4 hover:bg-zinc-800 flex flex-col gap-2 border border-zinc-700 w-full rounded-md">
+        <div class="max-w-screen-md mx-auto px-4 py-4 hover:bg-zinc-800 flex flex-col gap-2 border border-zinc-700 w-full rounded-md">
             <p dir="rtl" class="text-base">{decryptedMessage()}</p>
             <span class="text-sm text-sky-300">{props.time}</span>
         </div>
