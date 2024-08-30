@@ -7,7 +7,7 @@ async function generateKeyPair() {
         true,
         ["deriveKey", "deriveBits"]
     );
-    return { privateKey: keyPair.privateKey, pubKey: keyPair.publicKey };
+    return keyPair;
 }
 
 async function exportPublicKey(publicKey) {
