@@ -54,6 +54,14 @@ function SendMessage() {
     const [user] = createResource(params.privateID, getUser);
 
     const handleSendMessage = async () => {
+        if (!message().trim()) {
+            setSendStatus("پیامت نمی‌تونه خالی باشه!");
+            setTimeout(() => {
+                setSendStatus("");
+            }, 3000);
+            return;
+        }
+
         try {
             const { ephemeralPublicKey, encryptedMessage } = await cryptoUtils.hybridEncrypt(user().pubkey, message());
             const combinedData = cryptoUtils.combineEncryptedData(ephemeralPublicKey, encryptedMessage);
