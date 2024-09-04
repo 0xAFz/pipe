@@ -1,4 +1,4 @@
-import { createSignal, onMount } from "solid-js";
+import { createSignal, onMount, Suspense, Show, For } from "solid-js";
 import axios from './axios';
 import Message from "./Message";
 
@@ -26,8 +26,9 @@ function Home() {
 
   const getUpdates = async () => {
     try {
-      const response = await axios.get('/getUpdates');
+      const response = await axios.get('/getUpdates?timeout=60');
       if (response.status === 200 && response.data.length > 0) {
+        setNewMessageAnimation(true);
         setMessages(prevMessages => [...response.data, ...prevMessages]);
       }
     } catch (error) {
