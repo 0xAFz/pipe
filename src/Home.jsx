@@ -1,12 +1,6 @@
-import { createResource, For, Show, Suspense } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import axios from './axios';
 import Message from "./Message";
-
-
-const getMessages = async () => {
-  const response = await axios.get('/getMessages');
-  return response.data;
-}
 
 const formatUnixTime = (timestamp) => {
   const date = new Date(timestamp * 1000); // Convert Unix time to milliseconds
@@ -16,20 +10,61 @@ const formatUnixTime = (timestamp) => {
 }
 
 function Home() {
-  const [messages] = createResource(getMessages);
+  const [newMessageAnimation, setNewMessageAnimation] = createSignal(false);
+  const [messages, setMessages] = createSignal([]);
+
+  const getMessages = async () => {
+    try {
+      const response = await axios.get('/getMessages');
+      if (response.status === 200) {
+        setMessages(response.data);
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    }
+  };
+
+  const getUpdates = async () => {
+    try {
+      const response = await axios.get('/getUpdates');
+      if (response.status === 200 && response.data.length > 0) {
+        setMessages(prevMessages => [...response.data, ...prevMessages]);
+      }
+    } catch (error) {
+      console.error("Error polling updates:", error);
+    } finally {
+      getUpdates();
+    }
+  };
+
+  onMount(() => {
+    getMessages().then(() => {
+      getUpdates();
+    });
+  });
 
   return (
     <div class="flex flex-col items-center justify-center max-w-screen-md mx-auto gap-4">
       <Suspense fallback={<div dir="rtl">صبر کن پیاماتو بگیریم..</div>}>
-        <Show when={messages() && messages().length > 0} fallback={<div dir="rtl">فعلا هیچ پیامی نداری!</div>}>
+        <Show when={messages().length > 0} fallback={<div dir="rtl">فعلا هیچ پیامی نداری!</div>}>
           <For each={messages()}>
-            {(message) => (
-              <Message content={message.text} time={formatUnixTime(message.date)} />
+            {(message, index) => (
+              <Message
+                key={message.message_id}
+                content={message.text}
+                time={formatUnixTime(message.date)}
+                class={`${index() === 0 && newMessageAnimation()
+                  ? "animate-slideIn"
+                  : index() !== 0 && newMessageAnimation()
+                    ? "animate-slideDown"
+                    : ""
+                  }`}
+              />
             )}
           </For>
         </Show>
-        <div class="h-16"></div>
       </Suspense>
+      <div class="h-16"></div>
     </div>
   );
 }

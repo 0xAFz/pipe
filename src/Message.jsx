@@ -34,7 +34,7 @@ function Message(props) {
     });
 
     return (
-        <div class="max-w-screen-md mx-auto px-4 py-4 hover:bg-zinc-800 flex flex-col gap-2 border border-zinc-700 w-full rounded-md">
+        <div class={`max-w-screen-md mx-auto transition w-full px-4 py-4 hover:bg-zinc-800 flex flex-col gap-2 border border-zinc-700 rounded-md ${props.class}`}>
             <p dir="rtl" class="text-base">{decryptedMessage()}</p>
             <span class="text-sm text-sky-300">{props.time}</span>
         </div>
