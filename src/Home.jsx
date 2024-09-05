@@ -1,4 +1,4 @@
-import { createSignal, createResource, Suspense, Show, For, onCleanup } from "solid-js";
+import { createSignal, createResource, Suspense, Show, For, onCleanup, onMount } from "solid-js";
 import axios from './axios';
 import Message from "./Message";
 
@@ -32,11 +32,11 @@ function Home() {
     }
   };
 
-  createResource(messages, () => {
+  onMount(() => {
     if (messages()) {
       getUpdates();
     }
-  });
+  })
 
   onCleanup(() => {
     setNewMessageAnimation(false);
@@ -45,7 +45,7 @@ function Home() {
   return (
     <div class="flex flex-col items-center justify-center max-w-screen-md mx-auto gap-4">
       <Suspense fallback={<div dir="rtl">صبر کن پیاماتو بگیریم..</div>}>
-        <Show when={messages() && messages()?.length > 0} fallback={<div dir="rtl">فعلا هیچ پیامی نداری!</div>}>
+        <Show when={messages()?.length > 0} fallback={<div dir="rtl">فعلا هیچ پیامی نداری!</div>}>
           <For each={messages()}>
             {(message, index) => (
               <Message
