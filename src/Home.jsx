@@ -1,4 +1,4 @@
-import { createSignal, onMount, Suspense, Show, For } from "solid-js";
+import { createSignal, onMount, Suspense, Show, For, onCleanup } from "solid-js";
 import axios from './axios';
 import Message from "./Message";
 
@@ -39,9 +39,12 @@ function Home() {
   };
 
   onMount(() => {
-    getMessages().then(() => {
-      getUpdates();
-    });
+    getMessages();
+    getUpdates();
+  });
+
+  onCleanup(() => {
+    setNewMessageAnimation(false);
   });
 
   return (
