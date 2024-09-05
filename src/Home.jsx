@@ -33,10 +33,9 @@ function Home() {
   };
 
   onMount(() => {
-    if (messages()) {
-      getUpdates();
-    }
-  })
+    messages();
+    getUpdates();
+  });
 
   onCleanup(() => {
     setNewMessageAnimation(false);
