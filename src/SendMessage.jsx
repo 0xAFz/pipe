@@ -49,11 +49,14 @@ const sendMessage = async (privateID, message) => {
 
 function SendMessage() {
     const params = useParams();
+    const [user] = createResource(params.privateID, getUser);
     const [message, setMessage] = createSignal("");
     const [sendStatus, setSendStatus] = createSignal("");
-    const [user] = createResource(params.privateID, getUser);
+    const [isPending, setIsPending] = createSignal(false);
 
     const handleSendMessage = async () => {
+        if (isPending()) return;
+        
         if (!message().trim()) {
             setSendStatus("پیامت نمی‌تونه خالی باشه!");
             setTimeout(() => {
@@ -63,6 +66,8 @@ function SendMessage() {
         }
 
         try {
+            setIsPending(true);
+
             const { ephemeralPublicKey, encryptedMessage } = await cryptoUtils.hybridEncrypt(user().pubkey, message());
             const combinedData = cryptoUtils.combineEncryptedData(ephemeralPublicKey, encryptedMessage);
 
@@ -74,6 +79,7 @@ function SendMessage() {
         } finally {
             setTimeout(() => {
                 setSendStatus("");
+                setIsPending(false);
             }, 5000);
         }
     };
