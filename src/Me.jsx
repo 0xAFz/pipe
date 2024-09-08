@@ -32,7 +32,7 @@ function Me() {
 
   return (
     <>
-      <div onClick={copyToClipboard} class="active:bg-zinc-800 max-w-md mx-auto justify-between flex-row-reverse flex items-center border border-zinc-700 rounded-md px-8 py-3">
+      <div onClick={copyToClipboard} class="active:bg-zinc-900 max-w-md mx-auto justify-between flex-row-reverse flex items-center border border-color bg-section rounded-md px-8 py-3">
         <p>لینک ناشناس من</p>
         <button type="button" class="p-2 rounded bg-zinc-800 hover:bg-zinc-700">
           <Switch>
@@ -50,15 +50,15 @@ function Me() {
         </button>
       </div>
 
-      <div class="mt-8 max-w-md border border-zinc-700 mx-auto flex items-center justify-center rounded-md px-8 py-8 gap-4">
-        <A href="/deleteAccount" class="flex flex-row-reverse items-center gap-2 px-2 py-2 text-center bg-red-500 text-white rounded-md" type="button">
+      <div class="mt-8 max-w-md border border-color bg-section mx-auto flex items-center justify-center rounded-md px-8 py-8 gap-4">
+        <A href="/deleteAccount" class="flex flex-row-reverse items-center gap-2 px-2 py-2 text-center bg-zinc-800/80 text-white rounded-md" type="button">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
           </svg>
           حذف حساب
         </A>
 
-        <A href="/privacyPolicy" class="flex flex-row-reverse items-center gap-2 px-2 py-2 text-center bg-slate-200 text-black rounded-md" type="button">
+        <A href="/privacyPolicy" class="flex flex-row-reverse items-center gap-2 px-2 py-2 text-center primary text-black rounded-md" type="button">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
           </svg>

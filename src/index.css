@@ -53,3 +53,15 @@ textarea,
 .bg-card {
     background-color: hsla(24, 9.8%, 10%, 1);
 }
+
+.bg-section {
+    background-color: hsla(0, 0%, 9%);
+}
+
+.border-color {
+    border-color: hsla(240 3.7% 15.9%);
+}
+
+.primary {
+    background-color: hsla(160 84.1% 39.4%);
+}

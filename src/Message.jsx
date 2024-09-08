@@ -34,9 +34,9 @@ function Message(props) {
     });
 
     return (
-        <div class={`max-w-screen-md mx-auto transition w-full px-4 py-4 hover:bg-zinc-800 flex flex-col gap-2 border border-zinc-700 rounded-md ${props.class}`}>
+        <div class={`max-w-screen-md mx-auto transition w-full px-4 py-4 hover:bg-zinc-900 flex flex-col gap-2 bg-section border border-color rounded-md ${props.class}`}>
             <p dir="rtl" class="text-base">{decryptedMessage()}</p>
-            <span class="text-sm text-sky-300">{props.time}</span>
+            <span class="text-sm text-sky-400">{props.time}</span>
         </div>
     );
 }
